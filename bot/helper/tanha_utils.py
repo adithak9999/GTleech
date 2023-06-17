@@ -63,6 +63,11 @@ async def none_admin_utils(message, isLeech=False):
                 _msg, button = await forcesub(message, ids, button)
                 if _msg:
                     msg.append(_msg)
+    if user_id == OWNER_ID:
+        return msg, button
+    if len(download_dict) >= config_dict['BOT_MAX_TASKS']:
+        msg.append(f"Bot max tasks limit exceeded.\nBot max tasks limit is {config_dict['BOT_MAX_TASKS']}.\nPlease wait for the completion of old tasks.")
+        return msg, button
     if (maxtask := config_dict['USER_MAX_TASKS']) and await check_user_tasks(message.from_user.id, maxtask):
         msg.append(f"Your tasks limit exceeded for {maxtask} tasks.")
     if isLeech and config_dict['DISABLE_LEECH']:

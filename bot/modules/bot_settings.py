@@ -296,6 +296,9 @@ async def load_config():
     else:
         LOG_CHAT_ID = ''
 
+    BOT_MAX_TASKS = environ.get('BOT_MAX_TASKS', '')
+    BOT_MAX_TASKS = '' if len(BOT_MAX_TASKS) == 0 else int(BOT_MAX_TASKS)
+    
     USER_MAX_TASKS = environ.get('USER_MAX_TASKS', '')
     USER_MAX_TASKS = '' if len(USER_MAX_TASKS) == 0 else int(USER_MAX_TASKS)
 
@@ -440,6 +443,7 @@ async def load_config():
         "BASE_URL": BASE_URL,
         "BASE_URL_PORT": BASE_URL_PORT,
         "BOT_TOKEN": BOT_TOKEN,
+        "BOT_MAX_TASKS": BOT_MAX_TASKS,
         "CMD_SUFFIX": CMD_SUFFIX,
         "DATABASE_URL": DATABASE_URL,
         "DEFAULT_UPLOAD": DEFAULT_UPLOAD,
