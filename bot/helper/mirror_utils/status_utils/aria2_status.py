@@ -17,7 +17,6 @@ engine_ = "Aria"
 class Aria2Status:
 
     def __init__(self, gid, listener, seeding=False, queued=False):
-        gid = gid[:8]
         self.__gid = gid
         self.__download = get_download(gid)
         self.__listener = listener

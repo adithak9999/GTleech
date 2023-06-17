@@ -49,7 +49,7 @@ async def add_aria2c_download(link, path, listener, filename, auth, ratio, seed_
         await delete_links(listener.message)
         return
 
-    gid = download.gid
+    gid = download.gid[:8]
     name = download.name
     async with download_dict_lock:
         download_dict[listener.uid] = Aria2Status(
