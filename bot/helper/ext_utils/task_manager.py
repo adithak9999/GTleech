@@ -152,17 +152,19 @@ async def limit_checker(size, listener, user_id, isTorrent=False, isMega=False, 
                 if size > limit:
                     limit_exceeded = f'Direct limit is {get_readable_file_size(limit)}'
 
-        if not limit_exceeded and (LEECH_LIMIT := config_dict['LEECH_LIMIT']) and listener.isLeech:
-            limit = LEECH_LIMIT * 1024**3
-            if size > limit:
-                limit_exceeded = f'Leech limit is {get_readable_file_size(limit)}'
+        if not limit_exceeded and listener.isLeech:
+            if LEECH_LIMIT := config_dict['LEECH_LIMIT']:
+                limit = LEECH_LIMIT * 1024**3
+                if size > limit:
+                    limit_exceeded = f'Leech limit is {get_readable_file_size(limit)}'
 
-        if not limit_exceeded and (STORAGE_THRESHOLD := config_dict['STORAGE_THRESHOLD']) and not listener.isClone:
-            arch = any([listener.compress, listener.extract])
-            limit = STORAGE_THRESHOLD * 1024**3
-            acpt = await sync_to_async(check_storage_threshold, size, limit, arch)
-            if not acpt:
-                limit_exceeded = f'You must leave {get_readable_file_size(limit)} free storage.'
+        if not limit_exceeded and not listener.isClone:
+            if STORAGE_THRESHOLD := config_dict['STORAGE_THRESHOLD']:
+                arch = any([listener.compress, listener.extract])
+                limit = STORAGE_THRESHOLD * 1024**3
+                acpt = await sync_to_async(check_storage_threshold, size, limit, arch)
+                if not acpt:
+                    limit_exceeded = f'You must leave {get_readable_file_size(limit)} free storage.'
 
     if limit_exceeded:
         return f"{limit_exceeded}.\nYour File/Folder size is {get_readable_file_size(size)}"
