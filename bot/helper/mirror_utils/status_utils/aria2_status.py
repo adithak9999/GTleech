@@ -13,6 +13,7 @@ def get_download(gid):
         LOGGER.error(f'{e}: Aria2c, Error while getting torrent info')
 
 engine_ = "Aria"
+gid = gid[:8]
 
 class Aria2Status:
 
