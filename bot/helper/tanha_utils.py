@@ -4,15 +4,11 @@ from re import search
 
 from bencoding import bdecode, bencode
 
-from bot import DATABASE_URL, LOGGER, config_dict
-from bot.helper.ext_utils.bot_utils import (check_user_tasks, checking_access,
-                                            is_gdrive_link, is_magnet)
+from bot import DATABASE_URL, LOGGER, config_dict, download_dict
+from bot.helper.ext_utils.bot_utils import check_user_tasks, checking_access, is_gdrive_link, is_magnet
 from bot.helper.ext_utils.db_handler import DbManger
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
-from bot.helper.telegram_helper.message_utils import (delete_links, forcesub,
-                                                      auto_delete_message,
-                                                      message_filter,
-                                                      sendMessage)
+from bot.helper.telegram_helper.message_utils import delete_links, forcesub, auto_delete_message, message_filter, sendMessage
 
 
 async def extract_link(link, shouldDel=False):
@@ -52,6 +48,8 @@ async def stop_duplicate_tasks(message, link, file_=None):
 
 async def none_admin_utils(message, isLeech=False):
     msg = []
+    user_id = listener.message.from_user.id
+    owner_id = config_dict['OWNER_ID']
     if filtered := await message_filter(message):
         msg.append(filtered)
     button = None
