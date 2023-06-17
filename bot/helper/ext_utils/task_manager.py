@@ -115,12 +115,10 @@ async def start_from_queued():
                 for uid in list(queued_dl.keys()):
                     start_dl_from_queued(uid)
 
-
-async def limit_checker(size, listener, user_id, isTorrent=False, isMega=False, isDriveLink=False, isYtdlp=False):
+async def limit_checker(size, listener, isTorrent=False, isMega=False, isDriveLink=False, isYtdlp=False):
     limit_exceeded = ''
     user_id = listener.message.from_user.id
     owner_id = config_dict['OWNER_ID']
-    
     if user_id != owner_id:
         if listener.isClone:
             if CLONE_LIMIT := config_dict['CLONE_LIMIT']:
@@ -161,6 +159,5 @@ async def limit_checker(size, listener, user_id, isTorrent=False, isMega=False, 
             acpt = await sync_to_async(check_storage_threshold, size, limit, arch)
             if not acpt:
                 limit_exceeded = f'You must leave {get_readable_file_size(limit)} free storage.'
-    
-    if limit_exceeded:
-        return f"{limit_exceeded}.\nYour File/Folder size is {get_readable_file_size(size)}"
+        if limit_exceeded:
+            return f"{limit_exceeded}.\nYour File/Folder size is {get_readable_file_size(size)}"
