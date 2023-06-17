@@ -116,49 +116,50 @@ async def start_from_queued():
                     start_dl_from_queued(uid)
 
 
-async def limit_checker(size, listener, isTorrent=False, isMega=False, isDriveLink=False, isYtdlp=False):
+async def limit_checker(size, listener, user_id, isTorrent=False, isMega=False, isDriveLink=False, isYtdlp=False):
     limit_exceeded = ''
-    if listener.isClone:
-        if CLONE_LIMIT := config_dict['CLONE_LIMIT']:
-            limit = CLONE_LIMIT * 1024**3
+    owner_id = config_dict['OWNER_ID']
+    
+    if user_id != owner_id:
+        if listener.isClone:
+            if CLONE_LIMIT := config_dict['CLONE_LIMIT']:
+                limit = CLONE_LIMIT * 1024**3
+                if size > limit:
+                    limit_exceeded = f'Clone limit is {get_readable_file_size(limit)}.'
+        elif isMega:
+            if MEGA_LIMIT := config_dict['MEGA_LIMIT']:
+                limit = MEGA_LIMIT * 1024**3
+                if size > limit:
+                    limit_exceeded = f'Mega limit is {get_readable_file_size(limit)}'
+        elif isDriveLink:
+            if GDRIVE_LIMIT := config_dict['GDRIVE_LIMIT']:
+                limit = GDRIVE_LIMIT * 1024**3
+                if size > limit:
+                    limit_exceeded = f'Google drive limit is {get_readable_file_size(limit)}'
+        elif isYtdlp:
+            if YTDLP_LIMIT := config_dict['YTDLP_LIMIT']:
+                limit = YTDLP_LIMIT * 1024**3
+                if size > limit:
+                    limit_exceeded = f'Ytdlp limit is {get_readable_file_size(limit)}'
+        elif isTorrent:
+            if TORRENT_LIMIT := config_dict['TORRENT_LIMIT']:
+                limit = TORRENT_LIMIT * 1024**3
+                if size > limit:
+                    limit_exceeded = f'Torrent limit is {get_readable_file_size(limit)}'
+        elif DIRECT_LIMIT := config_dict['DIRECT_LIMIT']:
+            limit = DIRECT_LIMIT * 1024**3
             if size > limit:
-                limit_exceeded = f'Clone limit is {get_readable_file_size(limit)}.'
-    elif isMega:
-        if MEGA_LIMIT := config_dict['MEGA_LIMIT']:
-            limit = MEGA_LIMIT * 1024**3
+                limit_exceeded = f'Direct limit is {get_readable_file_size(limit)}'
+        if not limit_exceeded and (LEECH_LIMIT := config_dict['LEECH_LIMIT']) and listener.isLeech:
+            limit = LEECH_LIMIT * 1024**3
             if size > limit:
-                limit_exceeded = f'Mega limit is {get_readable_file_size(limit)}'
-    elif isDriveLink:
-        if GDRIVE_LIMIT := config_dict['GDRIVE_LIMIT']:
-            limit = GDRIVE_LIMIT * 1024**3
-            if size > limit:
-                limit_exceeded = f'Google drive limit is {get_readable_file_size(limit)}'
-    elif isYtdlp:
-        if YTDLP_LIMIT := config_dict['YTDLP_LIMIT']:
-            limit = YTDLP_LIMIT * 1024**3
-            if size > limit:
-                limit_exceeded = f'Ytdlp limit is {get_readable_file_size(limit)}'
-    elif isTorrent:
-        if TORRENT_LIMIT := config_dict['TORRENT_LIMIT']:
-            limit = TORRENT_LIMIT * 1024**3
-            if size > limit:
-                limit_exceeded = f'Torrent limit is {get_readable_file_size(limit)}'
-    elif DIRECT_LIMIT := config_dict['DIRECT_LIMIT']:
-        limit = DIRECT_LIMIT * 1024**3
-        if size > limit:
-            limit_exceeded = f'Direct limit is {get_readable_file_size(limit)}'
-    if not limit_exceeded and (LEECH_LIMIT := config_dict['LEECH_LIMIT']) and listener.isLeech:
-        limit = LEECH_LIMIT * 1024**3
-        if size > limit:
-            limit_exceeded = f'Leech limit is {get_readable_file_size(limit)}'
-    if not limit_exceeded and (STORAGE_THRESHOLD := config_dict['STORAGE_THRESHOLD']) and not listener.isClone:
-        arch = any([listener.compress, listener.extract])
-        limit = STORAGE_THRESHOLD * 1024**3
-        acpt = await sync_to_async(check_storage_threshold, size, limit, arch)
-        if not acpt:
-            limit_exceeded = f'You must leave {get_readable_file_size(limit)} free storage.'
+                limit_exceeded = f'Leech limit is {get_readable_file_size(limit)}'
+        if not limit_exceeded and (STORAGE_THRESHOLD := config_dict['STORAGE_THRESHOLD']) and not listener.isClone:
+            arch = any([listener.compress, listener.extract])
+            limit = STORAGE_THRESHOLD * 1024**3
+            acpt = await sync_to_async(check_storage_threshold, size, limit, arch)
+            if not acpt:
+                limit_exceeded = f'You must leave {get_readable_file_size(limit)} free storage.'
+    
     if limit_exceeded:
-        if user_id == OWNER_ID:
-            pass
-        else:
-            return f"{limit_exceeded}.\nYour File/Folder size is {get_readable_file_size(size)}"
+        return f"{limit_exceeded}.\nYour File/Folder size is {get_readable_file_size(size)}"
