@@ -95,7 +95,7 @@ class Aria2Status:
 
     def gid(self):
         self.__update()
-        return self.__gid[:8]
+        return self.__gid
 
     async def cancel_download(self):
         self.__update()
