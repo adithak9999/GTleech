@@ -118,6 +118,7 @@ async def start_from_queued():
 
 async def limit_checker(size, listener, user_id, isTorrent=False, isMega=False, isDriveLink=False, isYtdlp=False):
     limit_exceeded = ''
+    user_id = listener.message.from_user.id
     owner_id = config_dict['OWNER_ID']
     
     if user_id != owner_id:
