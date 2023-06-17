@@ -5,13 +5,11 @@ from pyrogram.filters import command, regex
 from pyrogram.handlers import CallbackQueryHandler, MessageHandler
 
 from bot import bot, bot_loop, download_dict, download_dict_lock
-from bot.helper.ext_utils.bot_utils import (MirrorStatus, getAllDownload,
-                                            getDownloadByGid, new_task)
+from bot.helper.ext_utils.bot_utils import MirrorStatus, getAllDownload, getDownloadByGid, new_task
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.telegram_helper.filters import CustomFilters
-from bot.helper.telegram_helper.message_utils import (anno_checker,
-                                                      editMessage, sendMessage)
+from bot.helper.telegram_helper.message_utils import anno_checker, editMessage, sendMessage
 
 
 async def cancel_mirror(client, message):

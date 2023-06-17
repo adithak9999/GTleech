@@ -229,7 +229,7 @@ async def clone(client, message):
     @new_task
     async def __run_multi():
         if multi > 1:
-            await sleep(5)
+            await sleep(2)
             msg = [s.strip() for s in input_list]
             index = msg.index('-i')
             msg[index+1] = f"{multi - 1}"
@@ -237,7 +237,7 @@ async def clone(client, message):
             nextmsg = await sendMessage(nextmsg, " ".join(msg))
             nextmsg = await client.get_messages(chat_id=message.chat.id, message_ids=nextmsg.id)
             nextmsg.from_user = message.from_user
-            await sleep(5)
+            await sleep(2)
             clone(client, nextmsg)
 
     __run_multi()
