@@ -50,6 +50,8 @@ async def none_admin_utils(message, isLeech=False):
     msg = []
     user_id = listener.message.from_user.id
     owner_id = config_dict['OWNER_ID']
+    tasks = len(download_dict)
+    bmax_tasks = config_dict['BOT_MAX_TASKS']
     if filtered := await message_filter(message):
         msg.append(filtered)
     button = None
@@ -61,9 +63,7 @@ async def none_admin_utils(message, isLeech=False):
                 _msg, button = await forcesub(message, ids, button)
                 if _msg:
                     msg.append(_msg)
-    if user_id == OWNER_ID:
-        return msg, button
-    if len(download_dict) >= config_dict['BOT_MAX_TASKS']:
+    if tasks >= bmax_tasks:
         msg.append(f"Bot max tasks limit exceeded.\nBot max tasks limit is {config_dict['BOT_MAX_TASKS']}.\nPlease wait for the completion of old tasks.")
         return msg, button
     if (maxtask := config_dict['USER_MAX_TASKS']) and await check_user_tasks(message.from_user.id, maxtask):
