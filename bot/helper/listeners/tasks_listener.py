@@ -408,7 +408,7 @@ class MirrorLeechListener:
             msg += f'\n<b>• Total Files</b>: {folders}\n'
             if mime_type != 0:
                 msg += f'\n<b>• Corrupted Files</b>: {mime_type}\n'
-            msg += '<b>• Leeched by</b>: {self.tag}\n'
+            msg += f'<b>• Leeched by</b>: {self.tag}\n'
             msg_ = '\n<b>Files has been sent in your DM.</b>'
             if not self.dmMessage:
                 if not files:
