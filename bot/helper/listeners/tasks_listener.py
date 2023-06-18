@@ -407,8 +407,8 @@ class MirrorLeechListener:
         if self.isLeech:
             msg += f'\n<b>• Total Files</b>: {folders}\n'
             if mime_type != 0:
-                msg += f'\n<b>• Corrupted Files</b>: {mime_type}\n'
-            msg += f'\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details["startTime"])}'
+                msg += f'<b>• Corrupted Files</b>: {mime_type}\n'
+            msg += f'<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details["startTime"])}\n'
             msg += f'<b>• Leeched by</b>: {self.tag}\n\n'
             msg_ = '<b>Files has been sent in your DM.</b>'
             if not self.dmMessage:
