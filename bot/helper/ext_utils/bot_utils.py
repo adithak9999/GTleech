@@ -343,7 +343,7 @@ def checking_access(user_id, button=None):
         if button is None:
             button = ButtonMaker()
         button.ubutton('Collect token', short_url(f'https://telegram.me/{bot_name}?start={token}'))
-        return f'Your token has expired, please collect a new token.\n\n<b>It will expire after {time_str}</b>', button
+        return f'Your token has expired, please collect a new token.\n<b>It will expire after {time_str}</b>!', button
     return None, button
 
 def format_validity_time(seconds):
