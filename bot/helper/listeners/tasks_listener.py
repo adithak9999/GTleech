@@ -401,7 +401,7 @@ class MirrorLeechListener:
         if self.isSuperGroup and config_dict['INCOMPLETE_TASK_NOTIFIER'] and DATABASE_URL:
             await DbManger().rm_complete_task(self.message.link)
         lmsg = f"<i><b>{escape(name)}</b></i>\n"
-        gmsg = f'Hey <b>{self.tag}</b>!\nYour job is done.'
+        gmsg = f'Hey <b>{self.tag}</b>!\nYour job is done.\n'
         msg = f"<i><b>{escape(name)}</b></i>\n"
         msg += f"\n<b>• Size: </b>{get_readable_file_size(size)}"
         LOGGER.info(f'Task Done: {name}')
