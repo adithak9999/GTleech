@@ -48,7 +48,7 @@ async def stop_duplicate_tasks(message, link, file_=None):
 
 async def none_admin_utils(message, isLeech=False):
     msg = []
-    user_id = listener.message.from_user.id
+    user_id = message.from_user.id
     owner_id = config_dict['OWNER_ID']
     tasks = len(download_dict)
     bmax_tasks = config_dict['BOT_MAX_TASKS']
