@@ -408,8 +408,9 @@ class MirrorLeechListener:
             msg += f'\n<b>• Total Files</b>: {folders}\n'
             if mime_type != 0:
                 msg += f'\n<b>• Corrupted Files</b>: {mime_type}\n'
-            msg += f'<b>• Leeched by</b>: {self.tag}\n'
-            msg_ = '\n<b>Files has been sent in your DM.</b>'
+            msg += f'\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details["startTime"])}'
+            msg += f'<b>• Leeched by</b>: {self.tag}\n\n'
+            msg_ = '<b>Files has been sent in your DM.</b>'
             if not self.dmMessage:
                 if not files:
                     await sendMessage(self.message, lmsg + msg)
@@ -467,8 +468,8 @@ class MirrorLeechListener:
             if mime_type == "Folder":
                 msg += f'\n<b>• SubFolders: </b>{folders}'
                 msg += f'\n<b>• Files: </b>{files}'
-            msg += f'\n<b>• Uploaded by</b>: {self.tag}'
             msg += f'\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details["startTime"])}'
+            msg += f'\n<b>• Uploaded by</b>: {self.tag}'
             if link or rclonePath and config_dict['RCLONE_SERVE_URL']:
                 buttons = ButtonMaker()
                 if link:
