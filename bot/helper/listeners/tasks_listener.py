@@ -401,14 +401,14 @@ class MirrorLeechListener:
         if self.isSuperGroup and config_dict['INCOMPLETE_TASK_NOTIFIER'] and DATABASE_URL:
             await DbManger().rm_complete_task(self.message.link)
         lmsg = f"<i><b>{escape(name)}</b></i>\n"
-        gmsg = f'Hey <b>{self.tag}</b>!\nYour job is done.\n'
         msg = f"<i><b>{escape(name)}</b></i>\n"
         msg += f"\n<b>• Size: </b>{get_readable_file_size(size)}"
         LOGGER.info(f'Task Done: {name}')
         if self.isLeech:
-            msg += f'\n<b>Total Files</b>: {folders}\n'
+            msg += f'\n<b>• Total Files</b>: {folders}\n'
             if mime_type != 0:
-                msg += f'\n<b>Corrupted Files</b>: {mime_type}\n'
+                msg += f'\n<b>• Corrupted Files</b>: {mime_type}\n'
+            msg += '<b>• Leeched by</b>: {self.tag}\n'
             msg_ = '\n<b>Files has been sent in your DM.</b>'
             if not self.dmMessage:
                 if not files:
@@ -431,12 +431,12 @@ class MirrorLeechListener:
                         await sendMessage(self.message, lmsg + msg + fmsg)
             else:
                 if not files:
-                    await sendMessage(self.message, gmsg + msg + msg_)
+                    await sendMessage(self.message, msg + msg_)
                     if self.logMessage:
                         await sendMessage(self.logMessage, lmsg + msg)
                 elif self.dmMessage and not config_dict['DUMP_CHAT_ID']:
                     await sendMessage(self.dmMessage, lmsg + msg)
-                    await sendMessage(self.message, gmsg + msg + msg_)
+                    await sendMessage(self.message, msg + msg_)
                     if self.logMessage:
                         await sendMessage(self.logMessage, lmsg + msg)
                 else:
@@ -446,14 +446,14 @@ class MirrorLeechListener:
                         if len(fmsg.encode() + msg.encode()) > 4000:
                             if self.logMessage:
                                 await sendMessage(self.logMessage, lmsg + msg + fmsg)
-                            await sendMessage(self.dmMessage, gmsg + msg + fmsg)
+                            await sendMessage(self.dmMessage, msg + fmsg)
                             await sleep(1)
                             fmsg = ''
                     if fmsg != '':
                         if self.logMessage:
                             await sendMessage(self.logMessage, lmsg + msg + fmsg)
-                        await sendMessage(self.message, gmsg + msg + msg_)
-                        await sendMessage(self.dmMessage, gmsg + msg + fmsg)
+                        await sendMessage(self.message, msg + msg_)
+                        await sendMessage(self.dmMessage, msg + fmsg)
             if self.seed:
                 if self.newDir:
                     await clean_target(self.newDir)
