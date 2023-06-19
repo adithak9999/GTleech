@@ -400,7 +400,6 @@ class MirrorLeechListener:
             await DbManger().remove_download(self.raw_url)
         if self.isSuperGroup and config_dict['INCOMPLETE_TASK_NOTIFIER'] and DATABASE_URL:
             await DbManger().rm_complete_task(self.message.link)
-        lmsg = f"<i><b>{escape(name)}</b></i>\n"
         msg = f"<i><b>{escape(name)}</b></i>\n"
         msg += f"\n<b>• Size: </b>{get_readable_file_size(size)}"
         LOGGER.info(f'Task Done: {name}')
@@ -413,46 +412,46 @@ class MirrorLeechListener:
             msg_ = '<b>Files has been sent in your DM.</b>'
             if not self.dmMessage:
                 if not files:
-                    await sendMessage(self.message, lmsg + msg)
+                    await sendMessage(self.message, msg)
                     if self.logMessage:
-                        await sendMessage(self.logMessage, lmsg + msg)
+                        await sendMessage(self.logMessage, msg)
                 else:
                     fmsg = ''
                     for index, (link, name) in enumerate(files.items(), start=1):
                         fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
                         if len(fmsg.encode() + msg.encode()) > 4000:
                             if self.logMessage:
-                                await sendMessage(self.logMessage, lmsg + msg + fmsg)
-                            await sendMessage(self.message, lmsg + msg + fmsg)
+                                await sendMessage(self.logMessage, msg + fmsg)
+                            await sendMessage(self.message, msg + fmsg)
                             await sleep(1)
                             fmsg = ''
                     if fmsg != '':
                         if self.logMessage:
-                            await sendMessage(self.logMessage, lmsg + msg + fmsg)
-                        await sendMessage(self.message, lmsg + msg + fmsg)
+                            await sendMessage(self.logMessage, msg + fmsg)
+                        await sendMessage(self.message, msg + fmsg)
             else:
                 if not files:
                     await sendMessage(self.message, msg + msg_)
                     if self.logMessage:
-                        await sendMessage(self.logMessage, lmsg + msg)
+                        await sendMessage(self.logMessage, msg)
                 elif self.dmMessage and not config_dict['DUMP_CHAT_ID']:
-                    await sendMessage(self.dmMessage, lmsg + msg)
+                    await sendMessage(self.dmMessage, msg)
                     await sendMessage(self.message, msg + msg_)
                     if self.logMessage:
-                        await sendMessage(self.logMessage, lmsg + msg)
+                        await sendMessage(self.logMessage, msg)
                 else:
                     fmsg = ''
                     for index, (link, name) in enumerate(files.items(), start=1):
                         fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
                         if len(fmsg.encode() + msg.encode()) > 4000:
                             if self.logMessage:
-                                await sendMessage(self.logMessage, lmsg + msg + fmsg)
+                                await sendMessage(self.logMessage, msg + fmsg)
                             await sendMessage(self.dmMessage, msg + fmsg)
                             await sleep(1)
                             fmsg = ''
                     if fmsg != '':
                         if self.logMessage:
-                            await sendMessage(self.logMessage, lmsg + msg + fmsg)
+                            await sendMessage(self.logMessage, msg + fmsg)
                         await sendMessage(self.message, msg + msg_)
                         await sendMessage(self.dmMessage, msg + fmsg)
             if self.seed:
