@@ -41,15 +41,14 @@ class MirrorStatus:
     STATUS_UPLOADING = "Uploading"
     STATUS_DOWNLOADING = "Downloading"
     STATUS_CLONING = "Cloning"
-    STATUS_QUEUEDL = "Queued"
-    STATUS_QUEUEUP = "Queued"
+    STATUS_QUEUEDL = "Download queued"
+    STATUS_QUEUEUP = "Upload queued"
     STATUS_PAUSED = "Paused"
     STATUS_ARCHIVING = "Archiving"
     STATUS_EXTRACTING = "Extracting"
     STATUS_SPLITTING = "Splitting"
     STATUS_CHECKING = "Checking"
     STATUS_SEEDING = "Seeding"
-
 
 class setInterval:
     def __init__(self, interval, action):
@@ -144,7 +143,7 @@ def get_readable_message():
     for download in list(download_dict.values())[STATUS_START:STATUS_LIMIT+STATUS_START]:
         msg += f"<i>{escape(f'{download.name()}')}\n"
         msg += f"by {download.extra_details['source']}</i>\n\n"
-        msg += f"<b>┌ {download.status()} with {download.engine}</b>"
+        msg += f"<b>┌ {download.status()}</b>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
             msg += f"\n<b>├ {progress_bar(download.progress())}</b> {download.progress()}"
             msg += f"\n<b>├ </b>{download.processed_bytes()} of {download.size()}"
