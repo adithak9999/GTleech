@@ -15,7 +15,7 @@ from bot import (DATABASE_URL, DOWNLOAD_DIR, GLOBAL_EXTENSION_FILTER, LOGGER,
                  MAX_SPLIT_SIZE, Interval, aria2, config_dict, download_dict,
                  download_dict_lock, non_queued_dl, non_queued_up,
                  queue_dict_lock, queued_dl, queued_up, status_reply_dict_lock,
-                 user_data, bot_name)
+                 user_data)
 from bot.helper.ext_utils.bot_utils import (extra_btns, get_readable_file_size,
                                             get_readable_time, sync_to_async)
 from bot.helper.ext_utils.db_handler import DbManger
@@ -404,55 +404,41 @@ class MirrorLeechListener:
         msg += f"\n<b>• Size: </b>{get_readable_file_size(size)}"
         LOGGER.info(f'Task Done: {name}')
         if self.isLeech:
-            msg += f'\n<b>• Total Files</b>: {folders}\n'
+            msg += f'\n<b>• Total Files</b>: {folders}'
+            msg += f"\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details['startTime'])}"
+            nofmsg = '<b>Files has been sent in your DM.</b>'
             if mime_type != 0:
-                msg += f'<b>• Corrupted Files</b>: {mime_type}\n'
-            msg += f'<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details["startTime"])}\n'
-            msg += f'<b>• Leeched by</b>: {self.tag}\n\n'
-            msg_ = '<b>Files has been sent in your DM.</b>'
-            if not self.dmMessage:
-                if not files:
-                    await sendMessage(self.message, msg)
-                    if self.logMessage:
-                        await sendMessage(self.logMessage, msg)
-                else:
-                    fmsg = ''
-                    for index, (link, name) in enumerate(files.items(), start=1):
-                        fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
-                        if len(fmsg.encode() + msg.encode()) > 4000:
-                            if self.logMessage:
-                                await sendMessage(self.logMessage, msg + fmsg)
-                            await sendMessage(self.message, msg + fmsg)
-                            await sleep(1)
-                            fmsg = ''
-                    if fmsg != '':
-                        if self.logMessage:
-                            await sendMessage(self.logMessage, msg + fmsg)
-                        await sendMessage(self.message, msg + fmsg)
+                msg += f'\n<b>• Corrupted Files</b>: {mime_type}'
+            msg += f'\n<b>• Leeched by</b>: {self.tag}\n\n'
+            if not files:
+                await sendMessage(self.message, msg)
+                if self.logMessage:
+                    await sendMessage(self.logMessage, msg)
+            elif self.dmMessage and not config_dict['DUMP_CHAT_ID']:
+                await sendMessage(self.dmMessage, msg)
+                msg += '<b>Files has been sent in your DM.</b>'
+                await sendMessage(self.message, msg)
+                if self.logMessage:
+                    await sendMessage(self.logMessage, msg)
             else:
-                if not files:
-                    await sendMessage(self.message, msg + msg_)
-                    if self.logMessage:
-                        await sendMessage(self.logMessage, msg)
-                elif self.dmMessage and not config_dict['DUMP_CHAT_ID']:
-                    await sendMessage(self.dmMessage, msg)
-                    await sendMessage(self.message, msg + msg_)
-                    if self.logMessage:
-                        await sendMessage(self.logMessage, msg)
-                else:
-                    fmsg = ''
-                    for index, (link, name) in enumerate(files.items(), start=1):
-                        fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
-                        if len(fmsg.encode() + msg.encode()) > 4000:
-                            if self.logMessage:
-                                await sendMessage(self.logMessage, msg + fmsg)
-                            await sendMessage(self.dmMessage, msg + fmsg)
-                            await sleep(1)
-                            fmsg = ''
-                    if fmsg != '':
+                fmsg = ''
+                buttons = ButtonMaker()
+                buttons = extra_btns(buttons)
+                if self.isSuperGroup and not self.message.chat.has_protected_content:
+                    buttons.ibutton('Save This Message', 'save', 'footer')
+                for index, (link, name) in enumerate(files.items(), start=1):
+                    fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
+                    if len(fmsg.encode() + msg.encode()) > 4000:
                         if self.logMessage:
                             await sendMessage(self.logMessage, msg + fmsg)
-                        await sendMessage(self.message, msg + msg_)
+                        await sendMessage(self.message, msg + nofmsg, buttons.build_menu(2))
+                        await sleep(1)
+                        fmsg = ''
+                if fmsg != '':
+                    if self.logMessage:
+                        await sendMessage(self.logMessage, msg + fmsg)
+                    await sendMessage(self.message, msg + nofmsg)
+                    await sendMessage(self.dmMessage, msg + fmsg, buttons.build_menu(2))
             if self.seed:
                 if self.newDir:
                     await clean_target(self.newDir)
@@ -466,8 +452,8 @@ class MirrorLeechListener:
             if mime_type == "Folder":
                 msg += f'\n<b>• SubFolders: </b>{folders}'
                 msg += f'\n<b>• Files: </b>{files}'
-            msg += f'\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details["startTime"])}'
             msg += f'\n<b>• Uploaded by</b>: {self.tag}'
+            msg += f'\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details["startTime"])}'
             if link or rclonePath and config_dict['RCLONE_SERVE_URL']:
                 buttons = ButtonMaker()
                 if link:
