@@ -115,13 +115,14 @@ class MirrorLeechListener:
                 source = reply_to.sender_chat.title
             elif not reply_to.from_user.is_bot:
                 source = reply_to.from_user.username or reply_to.from_user.id
-        if self.isSuperGroup:
-            if config_dict['DELETE_LINKS']:
-                self.extra_details['source'] = f"<i>{source}</i>"
-            else:
-                self.extra_details['source'] = f"<a href='{self.message.link}'>{source}</a>"
-        else:
+        if (
+            self.isSuperGroup
+            and config_dict['DELETE_LINKS']
+            or not self.isSuperGroup
+        ):
             self.extra_details['source'] = f"<i>{source}</i>"
+        else:
+            self.extra_details['source'] = f"<a href='{self.message.link}'>{source}</a>"
 
     async def onDownloadStart(self):
         if self.dmMessage == 'BotStarted':
@@ -408,7 +409,6 @@ class MirrorLeechListener:
         if self.isLeech:
             msg += f'\n<b>• Total Files</b>: {folders}'
             msg += f"\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details['startTime'])}"
-            nofmsg = '<b>Files has been sent in your DM.</b>'
             if mime_type != 0:
                 msg += f'\n<b>• Corrupted Files</b>: {mime_type}'
             msg += f'\n<b>• Leeched by</b>: {self.tag}\n\n'
@@ -428,6 +428,7 @@ class MirrorLeechListener:
                 buttons = extra_btns(buttons)
                 if self.isSuperGroup and not self.message.chat.has_protected_content:
                     buttons.ibutton('Save This Message', 'save', 'footer')
+                nofmsg = '<b>Files has been sent in your DM.</b>'
                 for index, (link, name) in enumerate(files.items(), start=1):
                     fmsg += f"{index}. <a href='{link}'>{name}</a>\n"
                     if len(fmsg.encode() + msg.encode()) > 4000:
