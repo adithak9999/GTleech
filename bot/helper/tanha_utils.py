@@ -45,7 +45,6 @@ async def stop_duplicate_tasks(message, link, file_=None):
             return 'duplicate_tasks'
         return raw_url
 
-
 async def none_admin_utils(message, isLeech=False):
     msg = []
     tasks = len(download_dict)
@@ -61,8 +60,7 @@ async def none_admin_utils(message, isLeech=False):
                 _msg, button = await forcesub(message, ids, button)
                 if _msg:
                     msg.append(_msg)
-    if bmax_tasks:  # changed this line
-        bmax_tasks = int(bmax_tasks)  # convert to int if not None or empty
+    if bmax_tasks:
         if tasks >= bmax_tasks:
             msg.append(f"Bot max tasks limit exceeded.\nBot max tasks limit is {bmax_tasks}.\nPlease wait for the completion of old tasks.")
     if (maxtask := config_dict['USER_MAX_TASKS']) and await check_user_tasks(message.from_user.id, maxtask):

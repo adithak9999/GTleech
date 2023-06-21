@@ -35,7 +35,7 @@ from bot.helper.telegram_helper.message_utils import (anno_checker, delete_links
                                                       open_category_btns,
                                                       request_limiter,
                                                       sendLogMessage,
-                                                      sendMessage)
+                                                      sendMessage, one_minute_del)
 from bot.helper.ext_utils.bulk_links import extract_bulk_links
 
 
@@ -192,8 +192,9 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
             file_ = None
 
     if not is_url(link) and not is_magnet(link) and not await aiopath.exists(link) and not is_rclone_path(link) and file_ is None:
-        await sendMessage(message, MIRROR_HELP_MESSAGE.format(cmd = message.command[0]))
+        reply_message = await sendMessage(message, MIRROR_HELP_MESSAGE.format(cmd = message.command[0]))
         await delete_links(message)
+        await one_minute_del(reply_message)
         return
     if not message.from_user:
         message.from_user = await anno_checker(message)

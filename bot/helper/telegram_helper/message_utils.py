@@ -94,6 +94,9 @@ async def auto_delete_message(cmd_message=None, bot_message=None):
         if bot_message is not None:
             await deleteMessage(bot_message)
 
+async def one_minute_del(message):
+    await sleep(60)
+    await deleteMessage(message)
 
 async def delete_all_messages():
     async with status_reply_dict_lock:

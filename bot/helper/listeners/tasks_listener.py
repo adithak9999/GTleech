@@ -117,11 +117,11 @@ class MirrorLeechListener:
                 source = reply_to.from_user.username or reply_to.from_user.id
         if self.isSuperGroup:
             if config_dict['DELETE_LINKS']:
-                self.extra_details['source'] = f"<i>{source}</i>"
+                self.extra_details['source'] = f"{source}"
             else:
                 self.extra_details['source'] = f"<a href='{self.message.link}'>{source}</a>"
         else:
-            self.extra_details['source'] = f"<i>{source}</i>"
+            self.extra_details['source'] = f"{source}"
 
     async def onDownloadStart(self):
         if self.dmMessage == 'BotStarted':
@@ -401,7 +401,7 @@ class MirrorLeechListener:
             await DbManger().remove_download(self.raw_url)
         if self.isSuperGroup and config_dict['INCOMPLETE_TASK_NOTIFIER'] and DATABASE_URL:
             await DbManger().rm_complete_task(self.message.link)
-        msg = f"<i><b>{escape(name)}</b></i>\n"
+        msg = f"{escape(name)}\n"
         msg += f"\n<b>• Size: </b>{get_readable_file_size(size)}"
         botbuttons = ButtonMaker()
         botbuttons.ubutton('View PM', f"https://t.me/{bot_name}", 'header')
@@ -535,7 +535,7 @@ class MirrorLeechListener:
             if self.sameDir and self.uid in self.sameDir['tasks']:
                 self.sameDir['tasks'].remove(self.uid)
                 self.sameDir['total'] -= 1
-        msg = f"{self.tag} Download: {escape(str(error))}\n\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details['startTime'])}"
+        msg = f"{self.tag} Download: {escape(str(error))}\n\n<b>Elapsed</b>: {get_readable_time(time() - self.extra_details['startTime'])}"
         await sendMessage(self.message, msg, button)
         if self.logMessage:
             await sendMessage(self.logMessage, msg, button)
@@ -576,7 +576,7 @@ class MirrorLeechListener:
             count = len(download_dict)
             if self.uid in self.sameDir:
                 self.sameDir.remove(self.uid)
-        msg = f"{self.tag} {escape(str(error))}\n\n<b>• Elapsed</b>: {get_readable_time(time() - self.extra_details['startTime'])}"
+        msg = f"{self.tag} {escape(str(error))}\n\n<b>Elapsed</b>: {get_readable_time(time() - self.extra_details['startTime'])}"
         await sendMessage(self.message, msg)
         if self.logMessage:
             await sendMessage(self.logMessage, msg)
