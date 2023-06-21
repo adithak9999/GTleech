@@ -244,7 +244,7 @@ async def sendLogMessage(message, link, tag):
                 caption = ''
                 if isSuperGroup:
                     if not config_dict['DELETE_LINKS']:
-                        caption += f'<b><a href="{message.link}">Source</a></b>\n'
+                        caption += f'<b><a href="{message.link}">Source</a></b>\n\n'
                 caption += f'<b>• Task by:</b> {tag}\n'
                 caption += f'<b>• User id:</b> <code>{message.from_user.id}</code>'
                 return await reply_to.copy(log_chat, caption=caption)
@@ -253,7 +253,7 @@ async def sendLogMessage(message, link, tag):
             if not config_dict['DELETE_LINKS']:
                 msg += f'<b><a href="{message.link}">Source</a></b>: '
         msg += f'<code>{link}</code>\n\n'
-        msg += f'<b>• Task by:</b> {tag}'
+        msg += f'<b>• Task by:</b> {tag}\n'
         msg += f'<b>• User id:</b> <code>{message.from_user.id}</code>'
         return await message._client.send_message(log_chat, msg, disable_web_page_preview=True)
     except FloodWait as r:
