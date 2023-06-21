@@ -35,7 +35,7 @@ from bot.helper.telegram_helper.message_utils import (anno_checker, delete_links
                                                       open_category_btns,
                                                       request_limiter,
                                                       sendLogMessage,
-                                                      sendMessage, one_minute_del)
+                                                      sendMessage, one_minute_del, five_minute_del)
 from bot.helper.ext_utils.bulk_links import extract_bulk_links
 
 
@@ -229,7 +229,8 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
         if error_button is not None:
             error_button = error_button.build_menu(2)
         await delete_links(message)
-        await sendMessage(message, final_msg, error_button)
+        force_m = await sendMessage(message, final_msg, error_button)
+        await five_minute_del(force_m)
         return
     logMessage = await sendLogMessage(message, link, tag)
 

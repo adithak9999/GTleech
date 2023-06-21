@@ -31,7 +31,7 @@ from bot.helper.telegram_helper.message_utils import (anno_checker,
                                                       open_category_btns,
                                                       request_limiter,
                                                       sendLogMessage,
-                                                      sendMessage)
+                                                      sendMessage, one_minute_del, five_minute_del)
 
 
 @new_task
@@ -360,8 +360,9 @@ async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
         link = reply_to.text.split('\n', 1)[0].strip()
 
     if not is_url(link):
-        await sendMessage(message, YT_HELP_MESSAGE.format(cmd = message.command[0]))
+        reply_message = await sendMessage(message, YT_HELP_MESSAGE.format(cmd = message.command[0]))
         await delete_links(message)
+        await one_minute_del(reply_message)
         return
     if not message.from_user:
         message.from_user = await anno_checker(message)
@@ -397,7 +398,8 @@ async def _ytdl(client, message, isLeech=False, sameDir=None, bulk=[]):
         if error_button is not None:
             error_button = error_button.build_menu(2)
         await delete_links(message)
-        await sendMessage(message, final_msg, error_button)
+        force_m = await sendMessage(message, final_msg, error_button)
+        await five_minute_del(force_m)
         return
     logMessage = await sendLogMessage(message, link, tag)
 

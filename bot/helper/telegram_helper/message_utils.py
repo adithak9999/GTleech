@@ -98,6 +98,10 @@ async def one_minute_del(message):
     await sleep(60)
     await deleteMessage(message)
 
+async def five_minute_del(message):
+    await sleep(300)
+    await deleteMessage(message)
+
 async def delete_all_messages():
     async with status_reply_dict_lock:
         for key, data in list(status_reply_dict.items()):
@@ -239,13 +243,18 @@ async def sendLogMessage(message, link, tag):
             if not reply_to.text:
                 caption = ''
                 if isSuperGroup:
-                    caption += f'<b><a href="{message.link}">Source</a></b> | '
-                caption += f'<b>#cc</b>: {tag} (<code>{message.from_user.id}</code>)'
+                    if not config_dict['DELETE_LINKS', False]:
+                        caption += f'<b><a href="{message.link}">Source</a></b>\n'
+                caption += f'<b>• Task by:</b> {tag}\n'
+                caption += f'<b>• User id:</b> <code>{message.from_user.id}</code>'
                 return await reply_to.copy(log_chat, caption=caption)
         msg = ''
         if isSuperGroup:
-            msg += f'<b><a href="{message.link}">Source</a></b>: '
-        msg += f'<code>{link}</code>\n\n<b>#cc</b>: {tag} (<code>{message.from_user.id}</code>)'
+            if not config_dict['DELETE_LINKS', False]:
+                msg += f'<b><a href="{message.link}">Source</a></b>: '
+        msg += f'<code>{link}</code>\n\n'
+        msg += f'<b>• Task by:</b> {tag}'
+        msg += f'<b>• User id:</b> <code>{message.from_user.id}</code>'
         return await message._client.send_message(log_chat, msg, disable_web_page_preview=True)
     except FloodWait as r:
         LOGGER.warning(str(r))

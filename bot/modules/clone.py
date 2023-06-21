@@ -36,7 +36,7 @@ from bot.helper.telegram_helper.message_utils import (anno_checker,
                                                       request_limiter,
                                                       sendLogMessage,
                                                       sendMessage,
-                                                      sendStatusMessage)
+                                                      sendStatusMessage, one_minute_del, five_minute_del)
 
 
 async def rcloneNode(client, message, link, dst_path, rcf, listener):
@@ -243,8 +243,9 @@ async def clone(client, message):
     __run_multi()
 
     if not link:
-        await sendMessage(message, CLONE_HELP_MESSAGE.format_map({'cmd': message.command[0]}))
+        reply_message = await sendMessage(message, CLONE_HELP_MESSAGE.format_map({'cmd': message.command[0]}))
         await delete_links(message)
+        await one_minute_del(reply_message)
         return
 
     if not message.from_user:
@@ -278,7 +279,8 @@ async def clone(client, message):
         if error_button is not None:
             error_button = error_button.build_menu(2)
         await delete_links(message)
-        await sendMessage(message, final_msg, error_button)
+        force_m = await sendMessage(message, final_msg, error_button)
+        await five_minute_del(force_m)
         return
 
     logMessage = await sendLogMessage(message, link, tag)
