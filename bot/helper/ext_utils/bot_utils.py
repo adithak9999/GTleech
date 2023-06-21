@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-from asyncio import (create_subprocess_exec, create_subprocess_shell,
-                     run_coroutine_threadsafe, sleep)
+from asyncio import create_subprocess_exec, create_subprocess_shell, run_coroutine_threadsafe, sleep
 from asyncio.subprocess import PIPE
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial, wraps
@@ -17,8 +16,7 @@ from functools import partial, wraps
 from concurrent.futures import ThreadPoolExecutor
 from aiohttp import ClientSession
 
-from bot import (bot_loop, bot_name, botStartTime, config_dict, download_dict,
-                 download_dict_lock, extra_buttons, user_data)
+from bot import bot_loop, bot_name, botStartTime, config_dict, download_dict, download_dict_lock, extra_buttons, user_data
 from bot.helper.ext_utils.shortener import short_url
 from bot.helper.ext_utils.telegraph_helper import telegraph
 from bot.helper.telegram_helper.bot_commands import BotCommands
@@ -141,9 +139,9 @@ def get_readable_message():
         globals()['STATUS_START'] = STATUS_LIMIT * (PAGES - 1)
         globals()['PAGE_NO'] = PAGES
     for download in list(download_dict.values())[STATUS_START:STATUS_LIMIT+STATUS_START]:
-        msg += f"<i>{escape(f'{download.name()}')}\n"
-        msg += f"by {download.extra_details['source']}</i>\n\n"
-        msg += f"<b>┌ {download.status()}</b>"
+        msg += f"{escape(f'{download.name()}')}\n"
+        msg += f"by {download.extra_details['source']}\n\n"
+        msg += f"<b>┌ {download.status()}...</b>"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
             msg += f"\n<b>├ {progress_bar(download.progress())}</b> {download.progress()}"
             msg += f"\n<b>├ </b>{download.processed_bytes()} of {download.size()}"
