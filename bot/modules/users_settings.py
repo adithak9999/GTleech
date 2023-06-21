@@ -25,7 +25,7 @@ from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.message_utils import (editMessage, sendFile,
-                                                      sendMessage)
+                                                      sendMessage, deleteMessage, five_minute_del)
 
 handler_dict = {}
 
@@ -106,8 +106,9 @@ async def update_user_settings(query):
 
 async def user_settings(_, message):
     msg, button = await get_user_settings(message.from_user)
-    await sendMessage(message, msg, button)
-
+    reply_message = await sendMessage(message, msg, button)
+    await deleteMessage(message)
+    await five_minute_del(reply_message)
 
 async def set_yt_options(_, message, pre_event):
     user_id = message.from_user.id
