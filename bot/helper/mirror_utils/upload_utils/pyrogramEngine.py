@@ -283,7 +283,7 @@ class TgUploader:
             if not config_dict['DELETE_LINKS']:
                 msg += f'<b><a href="{self.__listener.message.link}">Source</a></b>\n\n' if self.__listener.isSuperGroup else self.__listener.message.text
             msg += f'<b>• Leeched by</b>: {self.__listener.tag}\n'
-            msg += f'<b>• User id</b>: {self.__listener.message.from_user.id}'
+            msg += f'<b>• User id</b>: <code>{self.__listener.message.from_user.id}</code>'
             await self.__sent_msg.reply(text=msg, quote=True, disable_web_page_preview=True)
         LOGGER.info(f"Leech Completed: {self.name}")
         await self.__listener.onUploadComplete(None, size, self.__msgs_dict, self.__total_files, self.__corrupted, self.name)

@@ -27,7 +27,7 @@ from .helper.ext_utils.fs_utils import clean_all, exit_clean_up, start_cleanup
 from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.message_utils import (editMessage, sendFile,
-                                                   sendMessage)
+                                                   sendMessage, deleteMessage, five_minute_del)
 from .modules import (anonymous, authorize, bot_settings, cancel_mirror,
                       category_select, clone, eval, gd_count, gd_delete,
                       gd_list, leech_del, mirror_leech, rmdb, rss,
@@ -76,7 +76,9 @@ async def stats(_, message):
                 f'<code>• Clone      :</code> {clone_limit}\n'\
                 f'<code>• Mega       :</code> {mega_limit}\n'\
                 f'<code>• User tasks :</code> {user_task}\n\n'
-    await sendMessage(message, stats)
+    reply_message = await sendMessage(message, stats)
+    await deleteMessage(message)
+    await five_minute_del(reply_message)
 
 async def start(_, message):
     token_timeout = config_dict['TOKEN_TIMEOUT']
