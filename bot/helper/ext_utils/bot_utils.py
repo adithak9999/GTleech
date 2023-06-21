@@ -6,14 +6,9 @@ from functools import partial, wraps
 from html import escape
 from re import match as re_match
 from time import time
-from html import escape
 from uuid import uuid4
-from psutil import virtual_memory, cpu_percent, disk_usage, virtual_memory
+from psutil import virtual_memory, cpu_percent, disk_usage
 from pyrogram.types import BotCommand
-from asyncio import create_subprocess_exec, create_subprocess_shell, run_coroutine_threadsafe, sleep
-from asyncio.subprocess import PIPE
-from functools import partial, wraps
-from concurrent.futures import ThreadPoolExecutor
 from aiohttp import ClientSession
 
 from bot import bot_loop, bot_name, botStartTime, config_dict, download_dict, download_dict_lock, extra_buttons, user_data
@@ -25,7 +20,6 @@ from bot.helper.telegram_helper.button_build import ButtonMaker
 THREADPOOL = ThreadPoolExecutor(max_workers=1000)
 
 MAGNET_REGEX = r'^magnet:\?.*xt=urn:(btih|btmh):[a-zA-Z0-9]*\s*'
-
 URL_REGEX = r'^(?!\/)(rtmps?:\/\/|mms:\/\/|rtsp:\/\/|https?:\/\/|ftp:\/\/)?([^\/:]+:[^\/@]+@)?(www\.)?(?=[^\/:\s]+\.[^\/:\s]+)([^\/:\s]+\.[^\/:\s]+)(:\d+)?(\/[^#\s]*[\s\S]*)?(\?[^#\s]*)?(#.*)?$'
 
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
@@ -33,7 +27,6 @@ SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 STATUS_START = 0
 PAGES = 1
 PAGE_NO = 1
-
 
 class MirrorStatus:
     STATUS_UPLOADING = "Uploading"
@@ -134,6 +127,7 @@ def get_readable_message():
     button = None
     STATUS_LIMIT = config_dict['STATUS_LIMIT']
     tasks = len(download_dict)
+    currentTime = get_readable_time(time() - botStartTime)
     globals()['PAGES'] = (tasks + STATUS_LIMIT - 1) // STATUS_LIMIT
     if PAGE_NO > PAGES and PAGES != 0:
         globals()['STATUS_START'] = STATUS_LIMIT * (PAGES - 1)
@@ -193,6 +187,7 @@ def get_readable_message():
         buttons.ibutton("Next", "status nex")
         button = buttons.build_menu(3)
     msg += f"<b>• Tasks running</b>: {tasks}"
+    msg += f"<b>• Bot uptime</b>: {currentTime}"
     msg += f"\n<b>• Free disk space</b>: {get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)}"
     msg += f"\n<b>• Uploading speed</b>: {get_readable_file_size(up_speed)}/s"
     msg += f"\n<b>• Downloading speed</b>: {get_readable_file_size(dl_speed)}/s"
