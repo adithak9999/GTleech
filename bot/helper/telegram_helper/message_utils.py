@@ -243,14 +243,14 @@ async def sendLogMessage(message, link, tag):
             if not reply_to.text:
                 caption = ''
                 if isSuperGroup:
-                    if not config_dict['DELETE_LINKS', False]:
+                    if not config_dict['DELETE_LINKS']:
                         caption += f'<b><a href="{message.link}">Source</a></b>\n'
                 caption += f'<b>• Task by:</b> {tag}\n'
                 caption += f'<b>• User id:</b> <code>{message.from_user.id}</code>'
                 return await reply_to.copy(log_chat, caption=caption)
         msg = ''
         if isSuperGroup:
-            if not config_dict['DELETE_LINKS', False]:
+            if not config_dict['DELETE_LINKS']:
                 msg += f'<b><a href="{message.link}">Source</a></b>: '
         msg += f'<code>{link}</code>\n\n'
         msg += f'<b>• Task by:</b> {tag}'
