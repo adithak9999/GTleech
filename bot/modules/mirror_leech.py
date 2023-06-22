@@ -7,12 +7,8 @@ from aiofiles.os import path as aiopath
 from pyrogram.filters import command
 from pyrogram.handlers import MessageHandler
 
-from bot import (IS_PREMIUM_USER, LOGGER, bot, categories_dict,
-                 config_dict)
-from bot.helper.ext_utils.bot_utils import (arg_parser, get_content_type, is_gdrive_link,
-                                            is_magnet, is_mega_link,
-                                            is_rclone_path, is_telegram_link,
-                                            is_url, new_task, sync_to_async)
+from bot import IS_PREMIUM_USER, LOGGER, bot, categories_dict, config_dict
+from bot.helper.ext_utils.bot_utils import arg_parser, get_content_type, is_gdrive_link, is_magnet, is_mega_link, is_rclone_path, is_telegram_link, is_url, new_task, sync_to_async
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
 from bot.helper.ext_utils.help_messages import MIRROR_HELP_MESSAGE
 from bot.helper.tanha_utils import none_admin_utils, stop_duplicate_tasks
@@ -28,14 +24,7 @@ from bot.helper.mirror_utils.rclone_utils.list import RcloneList
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
-from bot.helper.telegram_helper.message_utils import (anno_checker, delete_links,
-                                                      editMessage,
-                                                      get_tg_link_content,
-                                                      isAdmin, isBot_canDm,
-                                                      open_category_btns,
-                                                      request_limiter,
-                                                      sendLogMessage,
-                                                      sendMessage, one_minute_del, five_minute_del)
+from bot.helper.telegram_helper.message_utils import anno_checker, delete_links, deleteMessage, editMessage, get_tg_link_content, isAdmin, isBot_canDm, open_category_btns, request_limiter, sendLogMessage, sendMessage, one_minute_del, five_minute_del
 from bot.helper.ext_utils.bulk_links import extract_bulk_links
 
 
@@ -193,7 +182,7 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
 
     if not is_url(link) and not is_magnet(link) and not await aiopath.exists(link) and not is_rclone_path(link) and file_ is None:
         reply_message = await sendMessage(message, MIRROR_HELP_MESSAGE.format(cmd = message.command[0]))
-        await delete_links(message)
+        await deleteMessage(message)
         await one_minute_del(reply_message)
         return
     if not message.from_user:

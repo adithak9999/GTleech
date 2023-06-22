@@ -8,12 +8,8 @@ from aiofiles.os import path as aiopath
 from pyrogram.filters import command
 from pyrogram.handlers import MessageHandler
 
-from bot import (LOGGER, bot, categories_dict, config_dict, download_dict,
-                 download_dict_lock)
-from bot.helper.ext_utils.bot_utils import (arg_parser, cmd_exec,
-                                            get_telegraph_list, is_gdrive_link,
-                                            is_rclone_path, is_share_link,
-                                            new_task, sync_to_async)
+from bot import LOGGER, bot, categories_dict, config_dict, download_dict, download_dict_lock
+from bot.helper.ext_utils.bot_utils import arg_parser, cmd_exec, get_telegraph_list, is_gdrive_link, is_rclone_path, is_share_link, new_task, sync_to_async
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
 from bot.helper.ext_utils.help_messages import CLONE_HELP_MESSAGE
 from bot.helper.ext_utils.task_manager import limit_checker
@@ -27,16 +23,7 @@ from bot.helper.mirror_utils.status_utils.rclone_status import RcloneStatus
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
-from bot.helper.telegram_helper.message_utils import (anno_checker,
-                                                      delete_links,
-                                                      deleteMessage,
-                                                      editMessage, isAdmin,
-                                                      isBot_canDm,
-                                                      open_category_btns,
-                                                      request_limiter,
-                                                      sendLogMessage,
-                                                      sendMessage,
-                                                      sendStatusMessage, one_minute_del, five_minute_del)
+from bot.helper.telegram_helper.message_utils import anno_checker, delete_links, deleteMessage, editMessage, isAdmin, isBot_canDm, open_category_btns, request_limiter, sendLogMessage, sendMessage, sendStatusMessage, one_minute_del, five_minute_del, deleteMessage
 
 
 async def rcloneNode(client, message, link, dst_path, rcf, listener):
@@ -244,7 +231,7 @@ async def clone(client, message):
 
     if not link:
         reply_message = await sendMessage(message, CLONE_HELP_MESSAGE.format_map({'cmd': message.command[0]}))
-        await delete_links(message)
+        await deleteMessage(message)
         await one_minute_del(reply_message)
         return
 
