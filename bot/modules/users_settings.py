@@ -106,9 +106,7 @@ async def update_user_settings(query):
 
 async def user_settings(_, message):
     msg, button = await get_user_settings(message.from_user)
-    reply_message = await sendMessage(message, msg, button)
-    await deleteMessage(message)
-    await five_minute_del(reply_message)
+    await sendMessage(message, msg, button)
 
 async def set_yt_options(_, message, pre_event):
     user_id = message.from_user.id
