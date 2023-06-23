@@ -216,7 +216,7 @@ class RcloneTransferHelper:
         rc_path = self.__listener.upPath.strip('/')
         if rc_path.startswith('mrcc:'):
             rc_path = rc_path.split('mrcc:', 1)[1]
-            oconfig_path = f'zcl/{self.__listener.message.from_user.id}.conf'
+            oconfig_path = f'tanha/{self.__listener.message.from_user.id}.conf'
         else:
             oconfig_path = 'rcl.conf'
 

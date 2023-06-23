@@ -260,7 +260,7 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
             return
         elif up not in ['rcl', 'gd']:
             if up.startswith('mrcc:'):
-                config_path = f'zcl/{message.from_user.id}.conf'
+                config_path = f'tanha/{message.from_user.id}.conf'
             else:
                 config_path = 'rcl.conf'
             if not await aiopath.exists(config_path):
@@ -291,7 +291,7 @@ async def _mirror_leech(client, message, isQbit=False, isLeech=False, sameDir=No
     elif is_rclone_path(link):
         if link.startswith('mrcc:'):
             link = link.split('mrcc:', 1)[1]
-            config_path = f'zcl/{message.from_user.id}.conf'
+            config_path = f'tanha/{message.from_user.id}.conf'
         else:
             config_path = 'rcl.conf'
         if not await aiopath.exists(config_path):

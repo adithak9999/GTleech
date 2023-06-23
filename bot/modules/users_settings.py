@@ -35,7 +35,7 @@ async def get_user_settings(from_user):
     name = from_user.mention
     buttons = ButtonMaker()
     thumbpath = f"Thumbnails/{user_id}.jpg"
-    rclone_path = f'zcl/{user_id}.conf'
+    rclone_path = f'tanha/{user_id}.conf'
     user_dict = user_data.get(user_id, {})
     if user_dict.get('as_doc', False) or 'as_doc' not in user_dict and config_dict['AS_DOCUMENT']:
         ltype = "DOCUMENT"
@@ -151,12 +151,12 @@ async def set_thumb(_, message, pre_event):
 async def add_rclone(_, message, pre_event):
     user_id = message.from_user.id
     handler_dict[user_id] = False
-    path = f'{getcwd()}/zcl/'
+    path = f'{getcwd()}/tanha/'
     if not await aiopath.isdir(path):
         await mkdir(path)
     des_dir = ospath.join(path, f'{user_id}.conf')
     await message.download(file_name=des_dir)
-    update_user_ldata(user_id, 'rclone', f'zcl/{user_id}.conf')
+    update_user_ldata(user_id, 'rclone', f'tanha/{user_id}.conf')
     await message.delete()
     await update_user_settings(pre_event)
     if DATABASE_URL:
@@ -207,7 +207,7 @@ async def edit_user_settings(client, query):
     message = query.message
     data = query.data.split()
     thumb_path = f'Thumbnails/{user_id}.jpg'
-    rclone_path = f'zcl/{user_id}.conf'
+    rclone_path = f'tanha/{user_id}.conf'
     user_dict = user_data.get(user_id, {})
     if user_id != int(data[1]):
         await query.answer("Not Yours!", show_alert=True)
@@ -387,7 +387,7 @@ Check all available formatting options <a href="https://core.telegram.org/bots/a
         user_id = int(data[3])
         await query.answer()
         thumb_path = f'Thumbnails/{user_id}.jpg'
-        rclone_path = f'zcl/{user_id}.conf'
+        rclone_path = f'tanha/{user_id}.conf'
         if await aiopath.exists(thumb_path):
             await aioremove(thumb_path)
         if await aiopath.exists(rclone_path):

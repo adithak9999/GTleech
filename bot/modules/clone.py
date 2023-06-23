@@ -36,7 +36,7 @@ async def rcloneNode(client, message, link, dst_path, rcf, listener):
 
     if link.startswith('mrcc:'):
         link = link.split('mrcc:', 1)[1]
-        config_path = f'zcl/{message.from_user.id}.conf'
+        config_path = f'tanha/{message.from_user.id}.conf'
     else:
         config_path = 'rcl.conf'
 
@@ -57,7 +57,7 @@ async def rcloneNode(client, message, link, dst_path, rcf, listener):
         await sendMessage(message, 'Wrong Rclone Clone Destination!')
         return
     if dst_path.startswith('mrcc:'):
-        if config_path != f'zcl/{message.from_user.id}.conf':
+        if config_path != f'tanha/{message.from_user.id}.conf':
             await sendMessage(message, 'You should use same rcl.conf to clone between pathies!')
             await delete_links(message)
             return
@@ -272,7 +272,7 @@ async def clone(client, message):
 
     logMessage = await sendLogMessage(message, link, tag)
     if is_rclone_path(link):
-        if not await aiopath.exists('rcl.conf') and not await aiopath.exists(f'zcl/{message.from_user.id}.conf'):
+        if not await aiopath.exists('rcl.conf') and not await aiopath.exists(f'tanha/{message.from_user.id}.conf'):
             await sendMessage(message, 'Rclone Config Not exists!')
             await delete_links(message)
             return
