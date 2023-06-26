@@ -67,5 +67,4 @@ async def none_admin_utils(message, isLeech=False):
         msg.append(f"Your tasks limit exceeded for {maxtask} tasks.")
     if isLeech and config_dict['DISABLE_LEECH']:
         msg.append('Leech is disabled on this bot.\nUse other bots.')
-    await delete_links(message)
     return msg, button

@@ -75,7 +75,7 @@ async def path_updates(_, query, obj):
         await message.delete()
         obj.event.set()
     elif data[1] == 'def':
-        path = f'{obj.remote}{obj.path}' if obj.config_path == 'rclone.conf' else f'mrcc:{obj.remote}{obj.path}'
+        path = f'{obj.remote}{obj.path}' if obj.config_path == 'rcl.conf' else f'mrcc:{obj.remote}{obj.path}'
         if path != config_dict['RCLONE_PATH']:
             config_dict['RCLONE_PATH'] = path
             await obj.get_path_buttons()
