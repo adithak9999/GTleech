@@ -32,7 +32,7 @@ from .modules import (anonymous, authorize, bot_settings, cancel_mirror,
                       category_select, clone, eval, gd_count, gd_delete,
                       gd_list, leech_del, mirror_leech, rmdb, rss,
                       save_message, shell, status, torrent_search,
-                      torrent_select, users_settings, ytdlp)
+                      torrent_select, users_settings, ytdlp, broadcast)
 
 
 async def stats(_, message):
@@ -81,6 +81,14 @@ async def stats(_, message):
     await one_minute_del(reply_message)
 
 async def start(_, message):
+    id_ = message.from_user.id
+    if message.chat.type == "private":
+        if 'users' not in db.list_collection_names():
+            db.create_collection('users')  
+    if id_ and id_ not in user_data or user_data[id_].get('is_bot_user'):
+        update_user_ldata(id_, 'is_bot_user', True)
+    if DATABASE_URL:
+        await DbManger().update_user_data(id_)
     token_timeout = config_dict['TOKEN_TIMEOUT']
     if len(message.command) > 1:
         userid = message.from_user.id
