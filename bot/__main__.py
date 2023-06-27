@@ -81,6 +81,7 @@ async def stats(_, message):
     await one_minute_del(reply_message)
 
 async def start(_, message):
+    token_timeout = config_dict['TOKEN_TIMEOUT']
     id_ = message.from_user.id
     if message.chat.type == "private":
         if 'users' not in db.list_collection_names():
@@ -89,7 +90,6 @@ async def start(_, message):
         update_user_ldata(id_, 'is_bot_user', True)
     if DATABASE_URL:
         await DbManger().update_user_data(id_)
-    token_timeout = config_dict['TOKEN_TIMEOUT']
     if len(message.command) > 1:
         userid = message.from_user.id
         input_token = message.command[1]
