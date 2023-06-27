@@ -82,13 +82,15 @@ async def stats(_, message):
 
 async def start(_, message):
     token_timeout = config_dict['TOKEN_TIMEOUT']
-    userid = message.from_user.id
-    if userid and (userid not in user_data or user_data[id_].get('is_bot_user')):
-        update_user_ldata(userid, 'is_bot_user', True)
-    if DATABASE_URL:
-        await DbManger().update_user_data(userid)
+    id_ = message.from_user.id
+    
+    #if id_ and (id_ not in user_data or user_data[id_].get('is_bot_user')):
+    #    update_user_ldata(id_, 'is_bot_user', True)
+  #  if DATABASE_URL:
+   #     await DbManger().update_user_data(id_)
         
     if len(message.command) > 1:
+        userid = message.from_user.id
         input_token = message.command[1]
         
         if userid not in user_data:
