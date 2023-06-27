@@ -92,10 +92,7 @@ async def start(_, message):
         data = user_data[userid]
         if 'token' not in data or data['token'] != input_token:
             id_ = message.from_user.id
-            if message.chat.type == "private":
-                if 'users' not in db.list_collection_names():
-                    db.create_collection('users')  
-            if id_ and id_ not in user_data or user_data[id_].get('is_bot_user'):
+            if id_ not in user_data or user_data[id_].get('is_bot_user'):
                 update_user_ldata(id_, 'is_bot_user', True)
             if DATABASE_URL:
                 await DbManger().update_user_data(id_)
