@@ -82,8 +82,6 @@ async def stats(_, message):
 
 async def start(_, message):
     token_timeout = config_dict['TOKEN_TIMEOUT']
-    id_ = message.from_user.id
-    
     if len(message.command) > 1:
         userid = message.from_user.id
         input_token = message.command[1]
@@ -92,15 +90,21 @@ async def start(_, message):
             return await sendMessage(message, "You do not own this token.")
         
         data = user_data[userid]
-        
-        # Check the token before updating it.
         if 'token' not in data or data['token'] != input_token:
+            id_ = message.from_user.id
+            if message.chat.type == "private":
+                if 'users' not in db.list_collection_names():
+                    db.create_collection('users')  
+            if id_ and id_ not in user_data or user_data[id_].get('is_bot_user'):
+                update_user_ldata(id_, 'is_bot_user', True)
+            if DATABASE_URL:
+                await DbManger().update_user_data(id_)
+                
             return await sendMessage(message, 'This token has already expired')
             
         data['token'] = str(uuid4())
         data['time'] = time()
         user_data[userid].update(data)
-        
         time_str = format_validity_time(token_timeout)
         return await sendMessage(message, f'Congratulations on acquiring a new token!\n\n<b>It will expire after {time_str}</b>') 
     
@@ -108,10 +112,6 @@ async def start(_, message):
         start_string = f'<b>Welcome!</b>\n\nYour files or links will be sent to you here.\n'
     else:
         start_string = f'<b>Welcome!</b>\n\nThis bot can upload all your links or Telegram files to Google Drive, Telegram, or Rclone destination!\n'
-    if id_ and (id_ not in user_data or user_data[id_].get('is_bot_user')):
-        update_user_ldata(id_, 'is_bot_user', True)
-    if DATABASE_URL:
-        await DbManger().update_user_data(id_)
         
     await sendMessage(message, start_string)
 
