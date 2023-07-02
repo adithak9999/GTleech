@@ -21,7 +21,7 @@ from bot.helper.listeners.aria2_listener import start_aria2_listener
 
 from .helper.ext_utils.bot_utils import (cmd_exec, get_readable_file_size,
                                          get_readable_time, set_commands,
-                                         sync_to_async, format_validity_time)
+                                         sync_to_async, format_validity_time, new_task)
 from .helper.ext_utils.db_handler import DbManger
 from .helper.ext_utils.fs_utils import clean_all, exit_clean_up, start_cleanup
 from .helper.telegram_helper.bot_commands import BotCommands
@@ -34,7 +34,7 @@ from .modules import (anonymous, authorize, bot_settings, cancel_mirror,
                       save_message, shell, status, torrent_search,
                       torrent_select, users_settings, ytdlp, broadcast)
 
-
+@new_task
 async def stats(_, message):
     total, used, free, disk = disk_usage('/')
     memory = virtual_memory()
@@ -80,6 +80,7 @@ async def stats(_, message):
     await deleteMessage(message)
     await one_minute_del(reply_message)
 
+@new_task
 async def start(_, message):
     await DbManger().update_pm_users(message.from_user.id)
     token_timeout = config_dict['TOKEN_TIMEOUT']
