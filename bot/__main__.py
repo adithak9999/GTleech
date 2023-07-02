@@ -81,6 +81,7 @@ async def stats(_, message):
     await one_minute_del(reply_message)
 
 async def start(_, message):
+    await DbManger().update_pm_users(message.from_user.id)
     token_timeout = config_dict['TOKEN_TIMEOUT']
     if len(message.command) > 1:
         userid = message.from_user.id
