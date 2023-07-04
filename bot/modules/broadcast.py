@@ -52,4 +52,4 @@ async def broadcast(_, message):
     await editMessage(pls_wait, status.format(**locals()) + f"\n\n<b>Elapsed Time:</b> <code>{get_readable_time(time() - start_time)}</code>")
         
         
-bot.add_handler(MessageHandler(broadcast, filters=command("broadcast") & CustomFilters.owner))
+bot.add_handler(MessageHandler(broadcast, filters=command(BotCommands.BroadcastCommand) & CustomFilters.owner))
